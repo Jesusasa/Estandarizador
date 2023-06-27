@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="edit.css">
+        <script src="./scripts/addRow.js"></script>  
+        <script src="./scripts/read_csv.js"></script>
+    </head>
+    <body>
+      <div class="titulo">
+        <h1>Estandarizador de BBDD</h1>     
+      </div>
+      <div class="break">
+        <select class ="maps" name="mapping" id="mapping">
+            <option value="henares-paz">Henares -> Paz</option>
+            <option value="12 oct-paz">12 Oct -> Paz</option>
+            <option value="new">Nuevo mapeado</option>
+        </select>
+        <input type="file" onchange="readCSVFile(event);" accept=".csv" />
+        
+      </div>
+      <div class="bbdd">
+        <div class="izq" id="outputCSV"></div>
+        <div class="der"><div id="outputROW"></div><button class="newRow" id="rightdiv" onclick="addRow(event);"></button></div>
+      </div>
+      
+    </body>
+</html>
