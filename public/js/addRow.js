@@ -1,7 +1,7 @@
 var counterR = 0;
 var array = [];
 var campos = 1;
-var anterior;
+var anterior = -1;
 
 function addRow(event) {
     
@@ -43,6 +43,8 @@ $(document).ready(function() {
 function newRow(event) {
   const campo = document.getElementById('campo');
   const campoNuevo = campo.cloneNode(true);
+  const a = campoNuevo.querySelector("input[name=campo]");
+  a.value ="";
 
   const cl = 'campos';
   const id = 'campo' + campos;
@@ -50,19 +52,15 @@ function newRow(event) {
   campoNuevo.setAttribute('id', id);
 
   campos=campos+1;
-
-  campo.parentNode.insertBefore(campoNuevo, campo.nextSibling);
+  event.target.parentElement.insertBefore(campoNuevo, event.target);
 }
 
 function measure(event) {
   const value = event.target.value;
   const id = event.target.id;
 
-  console.log(value);
-  console.log(event);
-
   var activo = event.target.parentElement.children;
-  if(anterior !== undefined) {
+  if(anterior !== -1) {
     event.target.parentElement.children[anterior].style.display = 'none';
   }
 
@@ -91,9 +89,7 @@ function measure(event) {
     selectOtros.style.display = 'inline';
     anterior = 8;
   } else {
-    const selectNone = event.target.parentElement.children[2];
-    selectNone.style.display = 'inline';
-    anterior = 9;
+    anterior = -1;
   }
 }
 

@@ -31,7 +31,7 @@
     </div>
     <form action="/crear_modelo" method="POST">
       <div class="bbdd">
-        <div class="der">
+        <div class="der" id="fields">
           <div class="campos" id="campo">
             <input type="text" placeholder="Nombre del campo" name="campo">
             <select name="tipoUds" id="tipo" onchange="measure(event);">
@@ -44,7 +44,6 @@
               <option value="otros">Otros</option>
             </select>
             <select name="none" id="none">
-              <option value="none">Selecciona una opción</option>
             </select>
             <select name="long" id="long" style="display: none;">
               <option value="none">Selecciona una opción</option>

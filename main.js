@@ -138,6 +138,7 @@ app.post('/crear_modelo', (req, res) => {
     const csv = filas.map(fila => fila.join(',')).join('\n');
 
     fs.writeFileSync('datos.csv', csv, 'utf8');
+    console.log("fin");
 });
 
 app.get('/edit', (req, res) => {
