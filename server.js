@@ -60,7 +60,6 @@ app.post('/relations', (req, res) => {
   const ls = data.link;
   const save = JSON.stringify(l)+"\n"+JSON.stringify(r)+"\n"+JSON.stringify(ls);
   const file = name+".txt";
-  console.log(file);
   fs.writeFile(file, save, (err) => {
   if (err) {
     console.error(err);
@@ -84,8 +83,7 @@ app.get('/relationsS', (req, res) => {
 
 app.get('/relations/:option', (req, res) => {
   const name = req.params.option;
-  const file = path.join(__dirname, name);
-  console.log(file);
+  const file = path.join(path.join(__dirname, "relations"), name);
   if(!fs.existsSync(file)){
     res.status(404).send("File not found");
     return;

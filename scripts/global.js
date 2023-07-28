@@ -87,8 +87,6 @@ function resetEverything(){
 }
 
 function fillArrays(a1, a2, a3){
-    console.log(linkedL.length + " " + a1.length);
-    console.log(linkedR.length + " " + a2.length);
     if(linkedL.length == a1.length && linkedR.length == a2.length){
         linkedL = a1;
         linkedR = a2;
