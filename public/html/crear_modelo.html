@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear modelo</title>
+    <link rel='stylesheet' href='../css/edit.css' />
+    <link rel='stylesheet' href='../css/bootstrap.min.css' />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/addRow.js"></script>  
+    <script src="../js/read_csv.js"></script>
+</head>
+<body>
+    <div class="titulo">
+      <div class="row">
+        <div class="col">
+          <button type="button" class="botonAtras"><a href="/inicio"><img src="../img/volver2.png" width="50px" height="50px" class="rounded-circle"></a></button>
+        </div>
+        <div class="col col-11">
+          <h1 style="margin-right: 7rem;">Estandarizador de BBDD</h1> 
+        </div>
+      </div>
+      <br>
+      <div class="row" style="display: flex; justify-content: center;">
+        <h2>Crear un modelo propio</h2>
+      </div>
+    </div>
+    <div class="break" style="display: none;">
+      <input type="file" onchange="readCSVFile(event);" accept=".csv" />
+    </div>
+    <form action="/crear_modelo" method="POST">
+      <div class="bbdd">
+        <div class="der">
+          <div class="campos" id="campo">
+            <input type="text" placeholder="Nombre del campo" name="campo">
+            <select name="tipoUds" id="tipo" onchange="measure(event);">
+              <option value="none">Selecciona una opción</option>
+              <option value="long">Longitud</option>
+              <option value="peso">Peso/masa</option>
+              <option value="cant">Cantidad</option>
+              <option value="vol">Volumen</option>
+              <option value="temp">Temperatura</option>
+              <option value="otros">Otros</option>
+            </select>
+            <select name="none" id="none">
+              <option value="none">Selecciona una opción</option>
+            </select>
+            <select name="long" id="long" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="m">Metros</option>
+              <option value="mm">Milímietros</option>
+              <option value="pul">Pulgadas</option>
+            </select>
+            <select name="peso" id="peso" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="kg">Kilogramos</option>
+              <option value="g">Gramos</option>
+              <option value="mg">Miligramos</option>
+              <option value="lb">Libras</option>
+            </select>
+            <select name="cant" id="cant" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="uds">Unidades</option>
+              <option value="k">Miles</option>
+              <option value="mll">Millones</option>
+              <option value="mls">Milésimas</option>
+            </select>
+            <select name="vol" id="vol" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="cc">Cenímetros cúbicos</option>
+              <option value="l">Litros</option>
+              <option value="ml">Mililitros</option>
+            </select>
+            <select name="temp" id="temp" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="C">Grados Centígrados (ºC)</option>
+              <option value="F">Grados Fahrenheit (ºF)</option>
+              <option value="K">Grados Kelvin (ºK)</option>
+            </select>
+            <select name="otros" id="otros" style="display: none;">
+              <option value="none">Selecciona una opción</option>
+              <option value="mmHg">Milímetros de mercurio (mmHg)</option>
+              <option value="cal">Calorías</option>
+              <option value="kcal">Kilocalorías</option>
+            </select>
+          </div>
+          <button type="button" class="newRow" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
+        </div>
+        <button type="submit">Guardar</button>
+      </div>
+    </form>
+</body>
+</html>

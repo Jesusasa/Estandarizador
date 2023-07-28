@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Inicio</title>
+      <link rel="stylesheet" href="edit.css">
+      <link rel='stylesheet' href='/css/style.css' />
+      <link rel='stylesheet' href='/css/bootstrap.min.css' />
+      <script src="/js/jquery.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+      <script src="./scripts/addRow.js"></script>  
+      <script src="./scripts/read_csv.js"></script>
+    </head>
+    <body>
+      <div class="titulo">
+        <div class="col col-1">
+          <button type="button"><a href="/inicio"><img src="../public/img/volver2.jpeg" class="rounded-circle"></a></button>
+        </div>
+        <div class="col col-11">
+          <h1>Estandarizador de BBDD</h1> 
+        </div>    
+        <br>
+        <h2>Adaptar un modelo externo</h2>
+      </div>
+      <div class="break">
+        <select class ="maps" name="mapping" id="mapping">
+            <option value="henares-paz">Henares -> Paz</option>
+            <option value="12 oct-paz">12 Oct -> Paz</option>
+            <option value="new">Nuevo mapeado</option>
+        </select>
+        <input type="file" onchange="readCSVFile(event);" accept=".csv" />
+        
+      </div>
+      <div class="bbdd">
+        <div class="izq" id="outputCSV"></div>
+        <div class="der"><div id="outputROW"></div><button class="newRow" id="rightdiv" onclick="addRow(event);">Añadir campo</button></div>
+      </div>
+      
+    </body>
+</html>
