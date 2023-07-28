@@ -1,5 +1,4 @@
-var counterR = 0;
-var array = [];
+
 
 function addRow(event) {
     

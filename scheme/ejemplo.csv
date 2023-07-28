@@ -1,0 +1,10 @@
+nombre;texto;-
+apellido;texto;-
+años;cantidad;unidades
+altura;longitud;m
+peso;peso;kg
+presion arterial;otros;mmhg
+grupo sanguineo;texto;A+
+temperatura;temperatura;36.2
+tension diastolica;cantidad;15
+tension sistolica;cantidad;8
