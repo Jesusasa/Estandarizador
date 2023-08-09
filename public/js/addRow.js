@@ -1,7 +1,7 @@
 var counterR = 0;
 var array = [];
 var campos = 1;
-var anterior = -1;
+var anterior = [-1];
 
 function addRow(event) {
     
@@ -23,7 +23,7 @@ function addRow(event) {
     content.appendChild(metric); 
     content.appendChild(val); 
     output.appendChild(content);
-    
+
     array[counterR] = 0;
     counterR++;
 }
@@ -41,7 +41,7 @@ $(document).ready(function() {
 });
 */
 function newRow(event) {
-  const campo = document.getElementById('campo');
+  const campo = document.getElementById('campo0');
   const campoNuevo = campo.cloneNode(true);
   const a = campoNuevo.querySelector("input[name=campo]");
   a.value ="";
@@ -52,44 +52,52 @@ function newRow(event) {
   campoNuevo.setAttribute('id', id);
 
   campos=campos+1;
+
+  Array.from(campoNuevo.getElementsByClassName("medidas")).forEach(element => {
+    if(element.style.display == "inline") element.style.display = "none";
+  });
+
+  anterior.push(-1);
+
   event.target.parentElement.insertBefore(campoNuevo, event.target);
 }
 
 function measure(event) {
   const value = event.target.value;
   const id = event.target.id;
+  var pid = event.target.parentElement.id;
+  pid = pid.replace("campo", "");
 
   var activo = event.target.parentElement.children;
-  if(anterior !== -1) {
-    event.target.parentElement.children[anterior].style.display = 'none';
+  if(anterior[pid] !== -1) {
+    event.target.parentElement.children[anterior[pid]].style.display = 'none';
   }
-
   if(value == 'long') {
     const selectLong = event.target.parentElement.children[3];
     selectLong.style.display = 'inline';
-    anterior = 3;
+    anterior[pid] = 3;
   } else if(value == 'peso') {
     const selectPeso = event.target.parentElement.children[4];
     selectPeso.style.display = 'inline';
-    anterior = 4;
+    anterior[pid] = 4;
   } else if(value == 'cant') {
     const selectCant = event.target.parentElement.children[5];
     selectCant.style.display = 'inline';
-    anterior = 5;
+    anterior[pid] = 5;
   } else if(value == 'vol') {
     const selectVol = event.target.parentElement.children[6];
     selectVol.style.display = 'inline';
-    anterior = 6;
+    anterior[pid] = 6;
   } else if(value == 'temp') {
     const selectTemp = event.target.parentElement.children[7];
     selectTemp.style.display = 'inline';
-    anterior = 7;
+    anterior[pid] = 7;
   } else if(value == 'otros') {
     const selectOtros = event.target.parentElement.children[8];
     selectOtros.style.display = 'inline';
-    anterior = 8;
+    anterior[pid] = 8;
   } else {
-    anterior = -1;
+    anterior[pid] = -1;
   }
 }
 

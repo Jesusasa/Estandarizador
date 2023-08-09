@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear modelo</title>
-    <link rel='stylesheet' href='../css/edit.css' />
     <link rel='stylesheet' href='../css/bootstrap.min.css' />
+    <link rel='stylesheet' href='../css/edit.css' />
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/addRow.js"></script>  
@@ -32,57 +32,57 @@
     <form action="/crear_modelo" method="POST">
       <div class="bbdd">
         <div class="der" id="fields">
-          <div class="campos" id="campo">
+          <div class="campos" id="campo0">
             <input type="text" placeholder="Nombre del campo" name="campo">
             <select name="tipoUds" id="tipo" onchange="measure(event);">
               <option value="none">Selecciona una opción</option>
-              <option value="long">Longitud</option>
+              <!-- <option value="long">Longitud</option>
               <option value="peso">Peso/masa</option>
               <option value="cant">Cantidad</option>
               <option value="vol">Volumen</option>
               <option value="temp">Temperatura</option>
-              <option value="otros">Otros</option>
+              <option value="otros">Otros</option> -->
             </select>
-            <select name="none" id="none">
+            <!-- <select name="none" id="none">
             </select>
-            <select name="long" id="long" style="display: none;">
+            <select class="medidas" name="long" id="long" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="m">Metros</option>
               <option value="mm">Milímietros</option>
               <option value="pul">Pulgadas</option>
             </select>
-            <select name="peso" id="peso" style="display: none;">
+            <select class="medidas" name="peso" id="peso" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="kg">Kilogramos</option>
               <option value="g">Gramos</option>
               <option value="mg">Miligramos</option>
               <option value="lb">Libras</option>
             </select>
-            <select name="cant" id="cant" style="display: none;">
+            <select class="medidas" name="cant" id="cant" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="uds">Unidades</option>
               <option value="k">Miles</option>
               <option value="mll">Millones</option>
               <option value="mls">Milésimas</option>
             </select>
-            <select name="vol" id="vol" style="display: none;">
+            <select class="medidas" name="vol" id="vol" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="cc">Cenímetros cúbicos</option>
               <option value="l">Litros</option>
               <option value="ml">Mililitros</option>
             </select>
-            <select name="temp" id="temp" style="display: none;">
+            <select class="medidas" name="temp" id="temp" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="C">Grados Centígrados (ºC)</option>
               <option value="F">Grados Fahrenheit (ºF)</option>
               <option value="K">Grados Kelvin (ºK)</option>
             </select>
-            <select name="otros" id="otros" style="display: none;">
+            <select class="medidas" name="otros" id="otros" style="display: none;">
               <option value="none">Selecciona una opción</option>
               <option value="mmHg">Milímetros de mercurio (mmHg)</option>
               <option value="cal">Calorías</option>
               <option value="kcal">Kilocalorías</option>
-            </select>
+            </select> -->
           </div>
           <button type="button" class="newRow" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
         </div>
