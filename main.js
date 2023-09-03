@@ -83,16 +83,51 @@ app.get('/', (req, res) => {
 });
 
 app.get('/crear_modelo', (req, res) => {
-    res.render("crear_modelo");
+    /*fs.readFile(path.join(__dirname, 'metrics', 'medidas.txt'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error al leer los datos.');
+        } else {
+            const medidas = JSON.parse(data);
+
+            // Crear el objeto deseado
+            
+            const objetoMedidas = {
+                tipos: [],
+                nombres: []
+                
+                tipos: medidas.map(medida => medida.tipo),
+                nombres: medidas.reduce((acc, medida) => acc.concat(medida.filas), [])
+                
+            };
+            
+            let tipos = [];
+            medidas.forEach(obj => {
+                for (const key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        const item = JSON.parse(key);
+                        tipos.push(item.tipo);
+                    }
+                }
+            });
+
+            console.log(medidas);
+            res.render("crear_modelo", { medidas: medidas, tipos: tipos });
+        }
+    });*/
+    res.render('crear_modelo');
 });
 
+/*
 app.post('/crear_modelo', (req, res) => {
     const { campo, tipoUds, none, long, peso, cant, vol, temp, otros } = req.body;
+
+    //if(!campo) res.redirect("/crear_medidas");
 
     var res = [];
 
     var medidas = [long, peso, cant, vol, temp, otros];
-
+    
     for(var i = 0; i < long.length; i++) {
         if(long[i] != 'none') {
             res.push({ campo: campo[i], tipo: tipoUds[i], medida: long[i] });
@@ -110,7 +145,7 @@ app.post('/crear_modelo', (req, res) => {
             res.push({ campo: campo[i], tipo: tipoUds[i], medida: '-'});
         }
     }
-    /*
+
     medidas.map(medida => {
         for(var i = 0; i < medida.length; i++) {
             console.log(medida);
@@ -131,7 +166,7 @@ app.post('/crear_modelo', (req, res) => {
             }
         }
     });
-*/
+
     const filas = res.map(fila => [fila.campo, fila.tipo, fila.medida]);
 
     const cols = ['Campo', 'Tipo', 'Medida'];
@@ -141,6 +176,58 @@ app.post('/crear_modelo', (req, res) => {
 
     fs.writeFileSync('datos.csv', csv, 'utf8');
     console.log("fin");
+    
+});
+
+
+app.post('/crear_modelo', (req, res) => {
+
+});
+*/
+app.get('/crear_medidas', (req, res) => {
+    res.render("crear_medidas");
+});
+
+app.post('/crear_medidas', (req, res) => {
+    let medidas=req.body;
+    console.log(medidas);
+
+    // Ruta del archivo JSON
+    const fileName = 'medidas.txt';
+
+    // Leer el archivo si existe
+    fs.readFile(fileName, (err, fileData) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // El archivo no existe, creamos uno nuevo
+                const data = [medidas];
+                fs.writeFile(path.join(__dirname, 'metrics', fileName), medidas, (err) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).send('Error: los datos no se han guardado');
+                    } else {
+                        res.send('Los datos se han guardado correctamente');
+                    }
+                });
+            } else {
+                console.error(err);
+                res.status(500).send('Error desconocido al guardar los datos');
+            }
+        } else {
+            // El archivo existe, leemos su contenido y agregamos los nuevos datos
+            const existingData = fileData;
+            existingData.push(medidas);
+
+            fs.writeFile(path.join(__dirname, 'metrics', fileName), existingData, (err) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send('Error al guardar los datos.');
+                } else {
+                    res.send('Datos guardados exitosamente.');
+                }
+            });
+        }
+    });
 });
 
 app.get('/edit', (req, res) => {
@@ -174,6 +261,7 @@ app.get('/modificar-csv', (req, res) => {
 });
 
 app.use('/scheme', express.static(path.join(__dirname, '')));
+app.use('/metrics', express.static(path.join(__dirname, 'metrics')));
 
 app.post('/relations', (req, res) => {
   const name = req.body.fileName;
@@ -229,448 +317,6 @@ app.listen(config.port, function (err) {
     }
 });
 
-
-
-// ---------------------------------------------------MANEJADOR COMÚN----------------------------------------------------
-
-/* Arrancar el servidor 
-app.get("/", function (request, response) {
-    response.redirect("formulario_pag_inicial");
-    console.log(__dirname);
-});
-*/
-//Formulario de creacion de cuenta
-app.get("/formulario_crear_cuenta", function (request, response) {
-    response.render('formulario_crear_cuenta',{
-        emailError: null,
-        passwdError: null, 
-        cpassError: null,			
-        empError: null,
-        nombreError:null,
-    }); //por defecto no hay ningun error
-});
-
-app.post("/formulario_crear_cuenta", multerFactory.single('foto'), function (request, response) {
-    const { correo, passwd, cpass, nombre, perfil, tecnico, emp } = request.body;
-    let foto='user.jpg'
-    if(request.file) foto=request.file.originalname;
-    let ok = utils.okForm(correo, passwd, cpass, foto, nombre, perfil, tecnico, emp);
-
-    if (ok.error) {     
-         response.render("formulario_crear_cuenta", ok.errors);
-    } else {
-        daoU.existeUsuario(ok.usuario.email, function (err, existe) {
-            if (err) {
-                response.render("formulario_crear_cuenta", ok.errors);
-            } else {
-                if (existe) {
-                    daoU.reactivarUsuario(ok.usuario, function (err) {
-                        if (err) {
-                            response.status(500);
-                            response.render("formulario_crear_cuenta", ok.errors);
-                        } else {
-                            response.render("formulario_pag_inicial", { errorMsg: null});
-                        }
-                    });
-                } else {
-                    daoU.insertUsuario(ok.usuario, function (err, insert) {
-                        if (err) {
-                            response.status(500);
-                            response.render("formulario_crear_cuenta",  ok.errors );
-                        } else {
-                            response.render("formulario_pag_inicial", { errorMsg: null });
-                        }
-                    });
-                }
-            }
-        });
-    }
-});
-
-//Formulario de inicio de sesion
-app.get("/formulario_pag_inicial", function (request, response) {
-    response.render("formulario_pag_inicial", {errorMsg: null}); // por defecto no hay errores
-});
-
-app.post("/formulario_pag_inicial", function (request, response) {
-    daoU.isUserCorrect(request.body.correo, request.body.passw, function (err, ok) {
-        if (err) {
-            response.status(500);
-            response.render("formulario_pag_inicial", { errorMsg: err.message });
-        } else {
-            if (ok) {
-                request.session.currentUser = ok; //si estan bien los datos se guarda la info del usuario
-                if (ok.tecnico === 1) {
-                    response.redirect("/tecnico_entrantes"); //se va a la pantalla de tecnicos
-                } else {
-                    response.redirect("/usuario_misAvisos"); //se va a la pantalla de usuarios
-                }
-            } else {
-                let error = "Email o contraseña no válidos";
-                response.render("formulario_pag_inicial", { errorMsg: error});
-            }
-        }
-    });
-});
-
-//cerrar sesion
-app.get("/logout", function (request, response) {
-    request.session.destroy(); //se elimina la session en la BD
-    response.redirect("/formulario_pag_inicial"); // se redirecciona para iniciar sesion de nuevo
-});
-/*
-app.listen(config.port, function (err) {
-    if (err) {
-        console.log(err.message);
-    } else {
-        console.log(`Servidor arrancado en el puerto ${config.port}`);
-    }
-});
-*/
-//Manejador de rutas imagenes usuario
-app.get('/userImage/:email', accessControl, function (request, res) {
-    daoU.getUserImageName(request.params.email, function (err, image) {
-        if (err) res.end(err.message);
-        else if (image === null) {
-            const imgPath = __dirname + "/public/img/user.jpg"; // la imagen por defecto
-            res.sendFile(imgPath);
-        }
-        else {
-            const imgPath = __dirname + "/public/img/" + image;
-            res.sendFile(imgPath);
-        }
-    })
-})
-
-//MANEJADOR DE MODAL DE PERFIL
-app.get('/perfil', accessControl, function (request, response) {
-    daoU.getInfoUsuario(response.locals.user.idUser, function (err, infoUsuario) {
-        if (err) response.end("Error: " + err.message);
-        else {
-            if(infoUsuario.tecnico===0) {
-                daoA.getTiposAvisosUsuario(infoUsuario.idUser, function (err, i, s, f) {
-                    if(err) {
-                        response.end("Error: " + err.message);
-                    } else {
-                        response.render("modalPerfil", { usuario: infoUsuario, incidencias: i.i, sugerencias: s.s, felicitaciones: f.f });
-                    }
-                });
-            } else {
-                daoA.getTiposAvisosTecnico(infoUsuario.idUser, function (err, i, s, f) {
-                    if(err) {
-                        response.end("Error: " + err.message);
-                    } else {
-                        response.render("modalPerfil", { usuario: infoUsuario, incidencias: i.i, sugerencias: s.s, felicitaciones: f.f });
-                    }
-                });
-            }
-        }
-    })
-});
-//MANEJADOR DE MODAL NUEVO AVISO
-app.get('/nuevoAviso', accessControl, function (request, response) {
-    response.render("modal_nuevo_aviso", { user: response.locals.user });
-});
-
-app.post('/nuevoAviso', accessControl, function (request, response) {
-    daoA.insertAviso(response.locals.user, request.body, function (err) {
-        if (err) response.end("Error: " + err.message);
-        else {
-            response.redirect("/usuario_misAvisos");
-        }
-    })
-
-});
-
-// ---------------------------------------------------MANEJADOR USUARIO----------------------------------------------------
-
-//Pagina de avisos de un usuario estandar
-app.get("/usuario_misAvisos", accessControl, function (request, response) {
-    daoA.getAvisosUsuario(response.locals.user.idUser, function (err, avisosUsuario) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos del usuario recibidos");
-            response.render("usuario_misAvisos", { user: response.locals.user, avisosUsuario: avisosUsuario });
-        }
-    })
-})
-
-//buscar
-app.post('/obtener-avisos-u1', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoA.buscarAvisosUsuario(request.session.currentUser.idUser, request.body.texto, function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos encontrados por texto");
-            response.json(a);
-        }
-    });
-});
-
-//Pagina con el historico de avisos de un usuario estandar
-app.get("/usuario_historico", accessControl, function (request, response) {
-    daoA.getAvisosUsuarioHistorico(response.locals.user.idUser, function (err, historico) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Historico de avisos recibido");
-            response.render("usuario_historico", { avisos: historico });
-        }
-    });
-});
-
-//buscar
-app.post('/obtener-avisos-u2', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoA.buscarAvisosUsuario(request.session.currentUser.idUser, request.body.texto, function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos encontrados por texto");
-            response.json(a);
-        }
-    });
-});
-
-//buscar Avisos Usuario
-app.get("/buscar_usuario", accessControl, function(request, response){
-    const busqueda = request.query.busqueda;
-
-    const avisosFiltrados = avisos.filter(aviso => aviso.contenido.includes(busqueda));
-
-    response.send(avisosFiltrados);
-});
-
-app.post("/buscar_usuario", accessControl, function(request,response){
-    daoU.getAvisosUsuario(response.locals.usuario.idUser,function(err,incidencias){
-        if(err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else{
-            response.render("buscar_texto",{user:response.locals.usuario.nombre, listaAvisos:utils.buscarAvisos(request.body.buqueda)});
-        }
-    })
-
-});
-
-// ---------------------------------------------------MANEJADOR TÉCNICO----------------------------------------------------
-
-//entrantes tecnico
-app.get("/tecnico_entrantes", accessControl, function (request, response) {
-    daoA.getAvisosTecnicoEntrantes(function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Avisos entrantes de los técnicos recibidos");
-            daoU.getTecnicos(function(err, t){
-                if(err){
-                    response.status(500);
-                    response.end("Error: " + err.message);
-                } else {
-                    response.render("tecnico_entrantes", { user: response.locals.user, avisos: a, tecnicos: t });
-                }
-            });
-        }
-    });
-});
-
-//buscar
-app.post('/obtener-avisos-t1', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoA.buscarAvisosEntrantesTecnico(request.body.texto, function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos encontrados por texto");
-            response.json(a);
-        }
-    });
-});
-
-//avisos tecnico
-app.get("/tecnico_misAvisos", accessControl, function(request, response){
-    daoA.getAvisosTecnico(request.session.currentUser.idUser, function(err, a){
-        if(err){
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Avisos del tecnico recibidos");
-            response.render("tecnico_misAvisos", {avisos: a});
-        }
-    });
-});
-
-//buscar
-app.post('/obtener-avisos-t2', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoA.buscarAvisoTecnico(request.session.currentUser.idUser, request.body.texto, function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos encontrados por texto");
-            response.json(a);
-        }
-    });
-});
-
-//historico tecnico
-app.get("/tecnico_historico", accessControl, function (request, response) {
-    daoA.getAvisosTecnicoHistorico(request.session.currentUser.idUser, function (err, avisosHistoricoTecnico) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Historico de avisos recibido");
-            response.render("tecnico_Historico", { avisos: avisosHistoricoTecnico });
-        }
-    });
-});
-
-//buscar
-app.post('/obtener-avisos-t3', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoA.buscarAvisoTecnico(request.session.currentUser.idUser, request.body.texto, function (err, a) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Avisos encontrados por texto");
-            response.json(a);
-        }
-    });
-});
-
-//gestion usuarios tecnico
-app.get("/tecnico_gestionUsers", accessControl, function (request, response) {
-    daoU.getUsuarios(function (err, listaUsuarios) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Recuperados usuarios para gestionar correctamente");
-            response.render("tecnico_gestionUsers", { usuarios: listaUsuarios });
-
-        }
-    });
-});
-
-//buscar
-app.post('/obtener-usuarios-t4', (request, response) => {
-    // Obtener los datos del array de avisos
-    daoU.buscarUsuario(request.body.texto, function(err, u){
-        if(err){
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Usuarios recibidos");
-            response.json(u);
-        }
-    });
-});
-
-app.post("/gestionarUsuario/:idUser", accessControl, function (request, response) {
-    daoU.eliminarUsuario(request.params.idUser, function (err) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Usuario dado de baja");
-            response.redirect("/tecnico_gestionUsers");
-        }
-    });
-});
-
-
-// POST ENCARGADO DE CAPTURAR FORMULARIO DE BORRADO DE AVISO
-app.post("/eliminar_aviso/:idAviso", accessControl, function (request, response) {
-
-    daoA.eliminarAviso(request.params.idAviso, request.body.comentarios, function (err) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Aviso eliminado correctamente");
-            response.redirect("/tecnico_entrantes");
-        }
-    });
-});
-
-// POST ENCARGADO DE CAPTURAR FORMULARIO DE ASIGNACION DE AVISO
-app.post("/asignarAviso/:idAviso", accessControl, function (request, response) {
-
-    daoA.asignarAviso(request.params.idAviso, request.body.idTecnico, function (err) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Aviso asignado correctamente");
-            response.redirect("/tecnico_entrantes");
-        }
-    });
-});
-
-//terminar aviso
-app.post("/terminar_aviso/:avisoId", accessControl, function (request, response) {
-    daoA.terminarAviso(request.params.avisoId, request.body.comentario, response.locals.user.idUser, request.body.tipo, function (err) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        }
-        else {
-            console.log("Aviso eliminado correctamente");
-            response.status(200);
-            response.redirect("/tecnico_entrantes");
-        }
-    });
-});
-
-app.get("/buscar_avisoTecnico", accessControl, function (request, response) {
-    response.redirect("/tecnico_entrantes");
-})
-
-app.post("/buscar_avisoTecnico", accessControl, function (request, response) {
-    daoA.buscarAvisoTecnico(request.body.texto, function (err, listaAvisos) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Avisos encontrados por texto");
-            response.render('tecnico_entrantes', { avisos: listaAvisos });
-        }
-    });
-});
-
-app.get("/buscar_usuario_tecnico", accessControl, function (request, response) {
-    response.redirect("/tecnico_misAvisos");
-});
-
-app.post("/buscar_usuario_tecnico", accessControl, function (request, response) {
-    daoU.buscarUsuario(request.body.texto, function (err, listaAvisos) {
-        if (err) {
-            response.status(500);
-            response.end("Error: " + err.message);
-        } else {
-            console.log("Avisos encontrados por texto");
-            response.render("buscar_usuario", { avisos: listaAvisos });
-        }
-    });
-});
 
 
 
