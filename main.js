@@ -220,6 +220,7 @@ app.get('/relations/:option', (req, res) => {
 });
 
 app.use('/scheme', express.static(path.join(__dirname, 'scheme')));
+app.use('/options', express.static(path.join(__dirname, 'options')));
 
 app.listen(config.port, function (err) {
     if (err) {

@@ -25,7 +25,7 @@ function load_scheme(){
                 val.className = "value";
                 val.textContent = value;
                 var right = document.createElement('div');
-                right.className = "metric"
+                right.className = "metricR"
                 var metric = document.createElement('div');
                 metric.className = "main";
                 metric.textContent = value2;

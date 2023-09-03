@@ -88,11 +88,25 @@ body {
 }
 
 .content > .metric{
- width:30%;
+ width:15%;
  text-align: center;
  display:flex;
  justify-content: space-evenly;
 }
+
+.content > .submetric{
+  width:15%;
+  text-align: center;
+  display:flex;
+  justify-content: space-evenly;
+ }
+
+ .content > .metricR{
+  width:30%;
+  text-align: center;
+  display:flex;
+  justify-content: space-evenly;
+ }
 
 .content:hover{
    filter: brightness(0.9);
@@ -290,10 +304,12 @@ button {
 .previewContent{
   display:flex;
   justify-content: space-evenly;
+  max-height: 70px;
+  flex-grow:1;
   padding: 10px;  
   margin: 3px;
   border-radius: 2px;
-  border: 3px solid white;
+  border: 3px solid #ffcc80;
 }
 
 #shadow {
@@ -308,3 +324,29 @@ button {
   height: 100%;
   width: 100%;
  }
+
+.preview {
+  border: 1px solid black;
+  text-align: center;
+  flex-grow:1;
+}
+
+.pselected{
+  border: 1px solid white;
+}
+
+.previewText{
+  display:flex;
+  justify-content: space-evenly;
+  flex-grow:1;
+  border-radius: 2px;
+  border: 3px solid #ffcc80;
+}
+
+.previewQuantity{
+  display:flex;
+  justify-content: space-evenly;
+  flex-grow:1;
+  border-radius: 2px;
+  border: 3px solid #ffcc80;
+}

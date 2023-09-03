@@ -29,7 +29,7 @@ function mismatched(error){
     var mismatch = false;
     var i = 0;
     var types = [];
-    types.push("texto");
+    types.push("Texto");
     while(!mismatch && (i<selectedL.length || i<selectedR.length)){
         if(i<selectedL.length){
             var a = document.getElementById("leftdiv"+selectedL[i]);

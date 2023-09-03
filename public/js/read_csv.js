@@ -24,12 +24,16 @@ function readCSVFile(event) {
       counterL++;
       var val = document.createElement('div');
       val.className = "value";
+      var quantity = document.createElement('select');
+      quantity.className = "metric";
+      addOptions(quantity);
       var metric = document.createElement('select');
-      metric.className = "metric";
-      addOptions(metric);
+      metric.className = "submetric"
+      defaultSelect(quantity, metric);
       val.textContent = value;
       content.appendChild(val); 
-      content.appendChild(metric);  
+      content.appendChild(quantity);  
+      content.appendChild(metric);
       output.appendChild(content);
       }
     }
