@@ -124,11 +124,12 @@ body {
  max-height: 60px;
 }
 
-.botones {
- height: 25rem;
+#botones {
+ height: 28rem;
  display: flex;
  flex-direction: column;
  -ms-flex-align: baseline;
+ justify-content: space-around;
  align-items: center;
 }
 
@@ -139,7 +140,6 @@ body {
 .botonIni {
  height: 5rem;
  width: 15rem;
- margin-top: 5rem;
 }
 
 .selected{

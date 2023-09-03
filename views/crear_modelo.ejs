@@ -10,6 +10,7 @@
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/addRow.js"></script>
     <script src="../js/read_csv.js"></script>
+    <script src="../js/rellenarSelects.js"></script>
 </head>
 <body>
   <div class="titulo">
@@ -29,21 +30,42 @@
   <div class="break" style="display: none;">
     <input type="file" onchange="readCSVFile(event);" accept=".csv" />
   </div>
-  <form action="/crear_modelo" method="POST">
+  <!--
+  <div class="break">
+    <button class="btn btn-outline-warning"><a href="/crear_medidas" style="text-decoration: none; color: black;">Crear nuevas medidas</a></button>
+  </div>
+  -->
+  <form action="/crear_modelo" method="POST" id="formularioModelo">
     <div class="bbdd">
       <div class="der">
+        <input type="text" placeholder="Nombre del campo" name="campo">
+        <label for="tipoSelect">Tipo:</label>
+        <select id="tipoSelect" onchange="llenarNombres()">
+          <option value="">Selecciona una opción</option>
+            <% tipos.forEach((tipo) => { %>
+                <option value="<%= tipo %>"><%= tipo %></option>
+            <% }); %>
+        </select>
+
+        <% console.log(medidas); %>
+        <label for="medidaSelect">Medida:</label>
+        <select id="medidaSelect">
+            <!-- Las medidas se llenarán dinámicamente según el tipo seleccionado -->
+        </select>
+        <!--
         <div class="campos" id="campo0">
+          
           <input type="text" placeholder="Nombre del campo" name="campo">
           <select name="tipoUds" id="tipo" onchange="measure(event);">
             <option value="none">Selecciona una opción</option>
-            <!-- <option value="long">Longitud</option>
+            <option value="long">Longitud</option>
             <option value="peso">Peso/masa</option>
             <option value="cant">Cantidad</option>
             <option value="vol">Volumen</option>
             <option value="temp">Temperatura</option>
-            <option value="otros">Otros</option> -->
+            <option value="otros">Otros</option>
           </select>
-          <!-- <select class="medidas" name="none" id="none"  style="display: none;">
+          <select class="medidas" name="none" id="none"  style="display: none;">
             <option value="none">Selecciona una opción</option>
           </select>
           <select class="medidas" name="long" id="long" style="display: none;">
@@ -85,9 +107,9 @@
             <option value="kcal">Kilocalorías</option>
           </select> -->
         </div>
-        <button type="button" class="newRow" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
+        <button type="button" class="btn btn-outline-warning newRow" style="text-decoration: none; color: black; margin-top: 10px;" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
       </div>
-      <button type="submit">Guardar</button>
+      <button class="btn btn-outline-warning" style="text-decoration: none; color: black;" type="submit">Guardar</button>
     </div>
   </form>
 </body>

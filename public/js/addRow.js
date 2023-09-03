@@ -1,6 +1,7 @@
 var counterR = 0;
 var array = [];
 var campos = 1;
+var medidas = 1;
 var anterior = [-1];
 
 function addRow(event) {
@@ -106,3 +107,24 @@ function select(){
     if(array[a] == 0) array[a] = 1;
     else array[a] = 0;
 }
+/*
+function newMeasure(event) {
+  const medida = document.getElementById('medida0');
+  const medidaNueva = medida.cloneNode(true);
+  const a = medidaNueva.querySelector("input[name=medidas[]]");
+  a.value ="";
+
+  const cl = 'medidas';
+  const id = 'medida' + medidas;
+  medidaNueva.setAttribute('class', cl);
+  medidaNueva.setAttribute('id', id);
+
+  medidas=medidas+1;
+
+  Array.from(campoNuevo.getElementsByClassName("medidas")).forEach(element => {
+    if(element.style.display == "inline") element.style.display = "none";
+  });
+
+  event.target.parentElement.insertBefore(medidaNueva, event.target);
+}
+*/
