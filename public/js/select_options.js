@@ -4,14 +4,16 @@ var options = []; //contains the contents of options.txt, divided in its differe
 var quantities = []; //contains the title of each block, aka the quantities metrics measure
 
 function readyOptions(){
-    fetch("options/options.txt")
+    fetch("metrics/medidas.txt")
     .then(response => response.text())
     .then(data => {
         //separate the options in an array
-        var textfile = data.split('-');
+        var textfile = data.split('--');
+        console.log(textfile);
         for(var i = 0; i < textfile.length; i++){
-            options[i] = textfile[i].split('\r\n').filter(line => line.trim() !== '');
+            options[i] = textfile[i].split('\n').filter(line => line.trim() !== '');
         }
+        options.length -= 1;
         //save the quantity of each block in quanitities
         for(var i = 0; i<options.length; i++){
             quantities[i] = options[i][0];

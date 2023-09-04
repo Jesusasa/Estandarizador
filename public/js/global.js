@@ -148,7 +148,7 @@ function fillArrays(a1, a2, a3){
     }
 }
 
-//check if the links array if empty and enables or disables the button accordingly
+//check if the links array is empty and enables or disables the button accordingly
 function checkButtons(){
     var button = document.getElementById('transform');
     button.disabled = links.length == 0 ? true : false;
@@ -189,9 +189,11 @@ function paintBorders(){
 }
 
 function loadSelect(){
+
     fetch('/relationsS')
         .then(response => response.json())
         .then(data => {
+            
             data.forEach(element => {
                 var a = document.getElementById('maps');
                 var option = document.createElement('option');
@@ -217,7 +219,7 @@ function loadSelect(){
 function changeColorR(st, num){
     if(!linkedR[num]){
         if(!selectedR.includes(num)) {
-            if(!(numL > 1 && numR >= 1)){
+            if(numR < 1){
              st.classList.add("selected");
              selectedR.push(num);
              numR++;

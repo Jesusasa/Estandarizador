@@ -15,6 +15,8 @@ const multer = require("multer");
 
 
 
+
+
 // const DAOUsuarios = require("./DAO/DAOUsuarios");
 // const DAOAvisos = require("./DAO/DAOAvisos");
 const { callbackify } = require("util");
@@ -118,68 +120,29 @@ app.get('/crear_modelo', (req, res) => {
     res.render('crear_modelo');
 });
 
-/*
-app.post('/crear_modelo', (req, res) => {
-    const { campo, tipoUds, none, long, peso, cant, vol, temp, otros } = req.body;
 
+app.post('/crear_modelo', (req, res) => {
+    const { campo, tipos, medidas} = req.body;
     //if(!campo) res.redirect("/crear_medidas");
 
-    var res = [];
-
-    var medidas = [long, peso, cant, vol, temp, otros];
+    //var res = 'Campo;Tipo;Medida\n';
+    console.log(typeof campo);
+    var a = '';
     
-    for(var i = 0; i < long.length; i++) {
-        if(long[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: long[i] });
-        } else if(peso[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: peso[i]});
-        } else if(cant[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: cant[i]});
-        } else if(vol[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: vol[i]});
-        } else if(temp[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: temp[i]});
-        } else if(otros[i] != 'none') {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: otros[i]});
-        } else {
-            res.push({ campo: campo[i], tipo: tipoUds[i], medida: '-'});
+    if(typeof campo != "string"){
+        for(var i = 0; i < campo.length; i++) {
+            a += campo[i] + ';' + tipos[i]+ ';'+medidas[i] + '\n';
         }
     }
+    else {
+        a += campo + ';' + tipos + ';' + medidas + '\n';
+    }
 
-    medidas.map(medida => {
-        for(var i = 0; i < medida.length; i++) {
-            console.log(medida);
-            if(long[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: long[i] });
-            } else if(peso[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: peso[i]});
-            } else if(cant[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: cant[i]});
-            } else if(vol[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: vol[i]});
-            } else if(temp[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: temp[i]});
-            } else if(otros[i] != 'none') {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: otros[i]});
-            } else {
-                res.push({ campo: campo, tipo: tipoUds[i], medida: '-'});
-            }
-        }
-    });
-
-    const filas = res.map(fila => [fila.campo, fila.tipo, fila.medida]);
-
-    const cols = ['Campo', 'Tipo', 'Medida'];
-    filas.unshift(cols);
-
-    const csv = filas.map(fila => fila.join(',')).join('\n');
-
-    fs.writeFileSync('datos.csv', csv, 'utf8');
-    console.log("fin");
-    
+    fs.writeFileSync(path.join(__dirname, 'scheme', 'modelo.csv'), a, 'utf8');
+    res.render('inicio');
 });
 
-
+/*
 app.post('/crear_modelo', (req, res) => {
 
 });
@@ -188,15 +151,17 @@ app.get('/crear_medidas', (req, res) => {
     res.render("crear_medidas");
 });
 
-app.post('/crear_medidas', (req, res) => {
-    let medidas=req.body;
-    console.log(medidas);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post('/crear_medidasS', (req, res) => {
+    let medidas=req.body.text;
 
     // Ruta del archivo JSON
     const fileName = 'medidas.txt';
 
     // Leer el archivo si existe
-    fs.readFile(fileName, (err, fileData) => {
+    fs.readFile(path.join(__dirname, 'metrics', fileName), (err, fileData) => {
         if (err) {
             if (err.code === 'ENOENT') {
                 // El archivo no existe, creamos uno nuevo
@@ -215,8 +180,8 @@ app.post('/crear_medidas', (req, res) => {
             }
         } else {
             // El archivo existe, leemos su contenido y agregamos los nuevos datos
-            const existingData = fileData;
-            existingData.push(medidas);
+            var existingData = fileData;
+            existingData += medidas;
 
             fs.writeFile(path.join(__dirname, 'metrics', fileName), existingData, (err) => {
                 if (err) {

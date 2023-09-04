@@ -1,0 +1,37 @@
+Texto
+texto, 1
+--
+Distancia
+metros, *1
+decimetros, /10
+centimetros, /100
+kilometros, *1000
+millas, *1609
+pies, *0.3048
+--
+Peso
+gramos, *1
+decigramos, *0.1
+centigramos, *0.01
+kilogramos, *1000
+libras, *453.6
+--
+Tiempo
+segundos, *1
+minutos, *60
+horas, *3600
+milisegundos, *1000
+--
+Edad
+años, *1
+meses, /12
+dias, /365
+--
+Velocidad
+m/s, *1
+km/h, *0.277778
+--
+Temperatura
+Celsius, *1
+Kelvin, +273.15
+--

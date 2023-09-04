@@ -1,10 +1,13 @@
 document.addEventListener("csv_loaded", load_scheme);
 
+var schNames = [];
+var schQuant = [];
+var schMetric = []; 
 
 function load_scheme(){
     
     a = document.getElementById("outputSCH");
-        fetch("scheme/ejemplo.csv")
+        fetch("scheme/modelo.csv")
         .then(response => response.text())
         .then(data => {
            var lines = data.split('\n');
@@ -14,8 +17,11 @@ function load_scheme(){
             for (var i = 0; i < lines.length-1; i++) {
                 var columns = lines[i].split(';');
                 var value = columns[0]; 
+                schNames[i] = columns[0];
                 var value2 = columns[1];
+                schQuant[i] = columns[1];
                 var value3 = columns[2];
+                schMetric[i] = columns[2];
                 var content = document.createElement('div');
                 content.className = "content";
                 content.id = "rightdiv"+ counterR;

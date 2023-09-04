@@ -59,7 +59,7 @@ function newRow(event) {
   });
 
   anterior.push(-1);
-
+  console.log(event.target.parentElement);
   event.target.parentElement.insertBefore(campoNuevo, event.target);
 }
 

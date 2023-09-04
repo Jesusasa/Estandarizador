@@ -260,7 +260,7 @@ button {
  left: 50%;
  border-radius: 10px;
  box-sizing: border-box;
- z-index: 101;
+ z-index: 901;
 }
 
 #previewTitulo{
@@ -349,4 +349,54 @@ button {
   flex-grow:1;
   border-radius: 2px;
   border: 3px solid #ffcc80;
+}
+.targetRow{
+  display:flex;
+  justify-content: space-evenly;
+  flex-grow:1;
+  border-radius: 2px;
+  border: 3px solid #ffcc80;
+  margin-left: 30px;
+}
+
+#modelo{
+  width: 70%;
+  display:flex;
+  flex-flow: column; 
+}
+
+.campos{
+  display:flex;
+  flex-flow: column;
+}
+
+#modelo{
+  width: 70%;
+  display:flex;
+  flex-flow: column; 
+}
+
+#modelo > div{
+  margin-bottom: 5px;
+  border: 3px solid #cc8213;
+}
+
+.model{ 
+  width:100%;
+  display:flex;
+  flex-flow:row;
+  flex-grow:1;
+  align-self:stretch;
+}
+
+.model > div{
+background: #ffecb3;
+}
+
+#drop{
+  width: 90%;
+  height: 99%;
+  border: 3px solid #ffcc80;
+  background: #fff1c5;
+  align-self: center;
 }

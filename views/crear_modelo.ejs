@@ -37,21 +37,21 @@
   -->
   <form action="/crear_modelo" method="POST" id="formularioModelo">
     <div class="bbdd">
-      <div class="der">
-        <input type="text" placeholder="Nombre del campo" name="campo">
-        <label for="tipoSelect">Tipo:</label>
-        <select id="tipoSelect" onchange="llenarNombres()">
-          <option value="">Selecciona una opción</option>
-            <% tipos.forEach((tipo) => { %>
-                <option value="<%= tipo %>"><%= tipo %></option>
-            <% }); %>
-        </select>
-
-        <% console.log(medidas); %>
-        <label for="medidaSelect">Medida:</label>
-        <select id="medidaSelect">
-            <!-- Las medidas se llenarán dinámicamente según el tipo seleccionado -->
-        </select>
+      <div class="model">
+        <div id="modelo">
+        <div id="campo0" class="campos">
+          <input type="text" placeholder="Nombre del campo" name="campo" style:'width:100%'>
+          <label for="tipoSelect">Tipo:</label>
+          <select id="tipoSelect" onchange="llenarNombres(event)" name="tipos">
+            <option value="">Selecciona una opción</option>
+          </select>
+           <label for="medidaSelect">Medida:</label>
+           <select id="medidaSelect" name="medidas">
+               <!-- Las medidas se llenarán dinámicamente según el tipo seleccionado -->
+           </select>
+        </div>
+        <button type="button" class="btn btn-outline-warning newRow" style="text-decoration: none; color: black; margin-top: 10px;" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
+      </div>
         <!--
         <div class="campos" id="campo0">
           
@@ -107,7 +107,6 @@
             <option value="kcal">Kilocalorías</option>
           </select> -->
         </div>
-        <button type="button" class="btn btn-outline-warning newRow" style="text-decoration: none; color: black; margin-top: 10px;" id="nuevoCampo" onclick="newRow(event);">Añadir campo</button>
       </div>
       <button class="btn btn-outline-warning" style="text-decoration: none; color: black;" type="submit">Guardar</button>
     </div>

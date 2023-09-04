@@ -1,4 +1,4 @@
-nMedidas=0;
+var nMedidas=0;
 
 function anadirMedida(event) {
     const divMedidas = document.getElementById('medidas');
@@ -52,27 +52,44 @@ function submitFormulario(event) {
     */
 
     for(let i=0; i<medidas.length; i++) {
-      text.concat(medidas[i].value + ', ');
-      text.concat(equivalencias[i].value + '\n');
+       text += medidas[i].value + ', ';
+       text += equivalencias[i].value + '\n';
     }
 
-    text.concat('-\n');
+     text += '--\n';
 
-    console.log(text); 
+    console.log(text);
 
     // Realizar la solicitud AJAX
     
-    $.ajax({
-      url: '/crear_medidas',
+    /*$.ajax({
+      url: '/crear_medidasS',
       method: 'POST',
-      data: { texto: text },
+      headers: {
+        'Content-Type': 'text/plain'
+      },
+      data: {text},
       success: function (response) {
         console.log("Peticion AJAX realizada con exito");
       },
       error: function (xhr, status, error) {
         console.error('Error en la solicitud:', status, error);
       }
-    });
+    });*/
+    fetch('/crear_medidasS', {
+      method: 'POST',
+      headers:{
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({text: text})
+  })
+  .then(response => response.text())
+  .then(message => {
+      console.log(message);
+  })
+  .catch(error => {
+      console.error("There's been an issue creating the links file: "+ error);
+  });
     
 }
 /*

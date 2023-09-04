@@ -1,14 +1,16 @@
 document.addEventListener("close", closepreview);
 
 var textL = [];
-var textR = [];
 var valL = [];
-var valR = [];
+var elemR = [];
+var isRquantity = [];
 
 var chosen = false; //only one element can be chosen at a time when moving them in the preview
 
 //saves the final result of the project that will be used to transform the csv
 var final = [];
+
+var finalCurrent = [];
 //saves the metrics of the quanitities of each row
 var finalMetrics = [];
 
@@ -51,17 +53,20 @@ function transform(){
         }
 
         textL.length = 0;
-        textR.length = 0;
+        elemR.length = 0;
         valL.length = 0;
-        valR.length = 0;
+        finalMetrics.length = 0;
+        isRquantity.length = 0;
         var counter = 0;
 
         var tmp = []; //array with text rows
         var tmpV = []; //array with other rows
+        var tmpR = [];
 
         links.forEach(element => {
-            var side;
-            //separate left text, left values, right text and right values
+            
+            finalCurrent.length = 0;
+             //separate left text, left valuesand right text and right values
             element.left.forEach(a => {
                 var a1 = document.getElementById("leftdiv"+a);
                 if(a1.children[1].value == "Texto") tmp.push(a1.children[0].innerText);
@@ -71,29 +76,26 @@ function transform(){
             valL[counter] = tmpV.slice();
             tmp.length = 0;
             tmpV.length = 0;
-            element.right.forEach(b => {
-                var b1 = document.getElementById("rightdiv"+b);
-                if(b1.children[1].children[0].innerText == "Texto") tmp.push(b1.children[0].innerText);
-                else changeType(b1.children[0], b1.children, 1, tmpV);
-            });
-            textR[counter] = tmp.slice();
-            valR[counter] = tmpV.slice();
-            tmp.length = 0;
-            tmpV.length = 0;
+             var b1 = document.getElementById("rightdiv"+element.right[0]);
+             if(b1.children[1].children[0].innerText !== "Texto") {changeType(b1.children[0], b1.children, 1, tmpV);}
+             tmpV.length = 0;
+            
+            elemR[counter] = b1.children[0].innerText;
+            finalMetrics.push(finalCurrent.slice());
             counter++;
         });
         showPreview();
     }
 }
 
-function changeType(childName, childMetric, side, arrayV){
+function changeType(childName, childMetric, side, arrayV, counter){
     arrayV.push(childName.innerText);
     if(side == 0){
-        var tmp_m = {quantity: childMetric[1].value, metric: childMetric[2].value, name: childName.innerText};
-        finalMetrics.push(tmp_m);
+        var tmp_m = {quantity: childMetric[1].value, metric: childMetric[2].value, name: childName.innerText, side: "left"};
+        finalCurrent.push(tmp_m);
     } else if (side == 1){
-        var tmp_m = {quantity: childMetric[1].children[0].innerText, metric: childMetric[1].children[1].innerText, name: childName.innerText};
-        finalMetrics.push(tmp_m);
+        var tmp_m = {quantity: childMetric[1].children[0].innerText, metric: childMetric[1].children[1].innerText, name: childName.innerText, side: "right"};
+        finalCurrent.push(tmp_m);
     }
 }
 
@@ -105,6 +107,9 @@ function changeType(childName, childMetric, side, arrayV){
 //TODO: add another area to the right with the name of the target scheme row the elements will be in
 function showPreview(){
     //window with the preview of the rows
+    var shadow = document.createElement('div');
+    shadow.id = 'shadow';
+    document.body.appendChild(shadow);
     var w = document.createElement('div');
     w.id = 'previewWindow';
     //upper part, with the title and buttons
@@ -122,8 +127,7 @@ function showPreview(){
     b1.addEventListener('click', () => {
         console.log("confirmed");
         toArrays();
-        var event = new Event("close");
-        document.dispatchEvent(event);
+        inputDatabase();
     });
     //cancel button. Closes the window when clicked
     var b2 = document.createElement('button');
@@ -131,6 +135,7 @@ function showPreview(){
     b2.innerText = "Cancelar";
     b2.addEventListener('click', () => {
         console.log("cancel");
+        document.body.removeChild(shadow);
         var event = new Event("close");
         document.dispatchEvent(event);
     });
@@ -166,6 +171,8 @@ function showPreview(){
                 t.className = "previewText";
                 var m = document.createElement('div');
                 m.className = "previewQuantity";
+                var g = document.createElement('div');
+                g.className = "targetRow";
                 //each position of textL is an object with the names of the left rows of type Texto
                 //for each element, add an element with its content in the 'texts' area
                 textL[i].forEach(element => {
@@ -183,7 +190,7 @@ function showPreview(){
                 });
                 //each position of textR is an object with the names of the right rows of type Texto
                 //to be removed
-                textR[i].forEach(element => {
+                /*textR[i].forEach(element => {
                     //access each element of an object in textL
                         var box = document.createElement('div');
                         box.id = 'prev'+i+'-'+j;
@@ -195,7 +202,7 @@ function showPreview(){
                         });
                         t.appendChild(box);
                         j++;
-                });
+                });*/
                 //for each element to the left
                 valL[i].forEach(element => {
                     //access each element of an object in textL
@@ -203,15 +210,17 @@ function showPreview(){
                         box.id = 'prev'+i+'-'+j;
                         box.className = 'preview';
                         box.innerText = element;
-                        box.addEventListener("click", (event) => {
-                            toggleSelect(event);
-                            console.log(event);
-                        });
                         m.appendChild(box);
                         j++;
                 });
+                var box = document.createElement('div');
+                box.id = 'prev'+i+'-'+j;
+                j++;
+                box.className = 'preview';
+                box.innerText = elemR[i];
+                g.appendChild(box);
                 //to be removed
-                valR[i].forEach(element => {
+                /*valR[i].forEach(element => {
                     //access each element of an object in textL
                         var box = document.createElement('div');
                         box.id = 'prev'+i+'-'+j;
@@ -223,10 +232,16 @@ function showPreview(){
                         });
                         m.appendChild(box);
                         j++;
-                    });
+                    });*/
                 counterR++;
+                
+
                 content.appendChild(t);
                 content.appendChild(m);
+                /*var ar = document.createElement(img);
+                ar.src = "arrow_right.png"
+                content.appendChild(ar);*/
+                content.appendChild(g);
                 a.appendChild(content);
             }
 }
@@ -289,6 +304,7 @@ function toArrays(){
     //get the parent element of the rows
     var a = document.getElementById('previewTable');
     //for each row
+    final.length = 0;
     Array.from(a.children).forEach(element => {
         var i = 0;
         var tmp_L = [];
@@ -304,4 +320,156 @@ function toArrays(){
         var both = {text: tmp_L, right: tmp_R};
         final.push(both);
     });
+}
+
+function inputDatabase(){
+    var a = document.getElementById('previewTable');
+    a.innerHTML = '';
+    var b = document.createElement('div');
+    b.id = 'drop';
+    b.addEventListener("drop", (event) => {
+        event.preventDefault();
+        checkCSV(event);
+    });
+    b.addEventListener("dragover", (event) => {
+        event.preventDefault();
+    });
+    a.appendChild(b);
+}
+
+function checkCSV(e){
+    var a = e.dataTransfer.files[0];
+    if(a.type === "text/csv" || a.name.endsWith('.csv')){
+        const fileReader = new FileReader();
+        fileReader.readAsText(a);
+        fileReader.onload = function(){
+            const resu = fileReader.result;
+            lastStep(resu.split('\r\n'));
+        }
+    } else console.log("no csv");
+}
+
+//the csv that will be created has as many rows as the dropped csv
+//-but we will be transforming the values of each column per row
+//for every row of the dropped csv, get the columns' names and their respective values
+//then transform accordingly    
+
+function lastStep(a){
+    //for each row of the dropped csv:
+    //-for each column of the scheme:
+    //get the name of the rightdiv"i"
+    //check links[i].right[0] to see which is the target column the contents will be saved in
+    //check final[i].text and concat everything with spaces
+    //check final[i].right 
+    //-if it's not empty, for the first element, find its quantity in finalMetrics
+    //-find which index of the array options contains that quantity
+    //-transform the value
+    //----------------------------------------------------------------------------------
+    //variable where the new csv will be written
+    var final_csv = '';
+    //fill the first row with schNames;
+    for(var i = 0; i < schNames.length; i++){
+        final_csv += schNames[i];
+        if(i < schNames.length-1) final_csv += ',';
+    };
+    //for each row of the csv
+    var tmp_cols = a[0].split(',');
+    var tmp_a = a.slice(1);
+    //get number of each column of the scheme that has been linked
+    var rList = links.map(b => b.right[0]);
+    //////////////////////////checked till here
+    tmp_a.forEach(row => {
+        final_csv += '\r\n'
+        var tmp_row = row.split(',');
+        //for each column of the scheme. Columns that don't appear in links will be left empty
+        //we use a for instead of a forEach so we also keep track of the index we are in
+        //-since we gotta check if It's in links
+        for(var i = 0; i < schNames.length; i++){
+            var opts = [];
+            if(rList.indexOf(i) == -1){
+                final_csv += ',';
+            } else {
+                //if the column has links, we get the corresponding columns of the csv its linked to
+                var ind = rList.indexOf(i);
+                //concat all the text columns
+                var tmp_e = "";
+                final[ind].text.forEach(elem => {
+                    tmp_e += tmp_row[tmp_cols.indexOf(elem)];
+                });
+                //find which is the quantity of the rest of columns
+
+                var tmp_q = valL[ind][0];
+                var tmp_ind = finalMetrics[ind].map(a => a.name).indexOf(tmp_q);
+                var tmp_option = -1;
+                if(tmp_ind != -1){
+                    var m = finalMetrics[ind][tmp_ind].quantity;
+                    var n = options.map(a => a[0]).indexOf(m);
+                    tmp_option = options[n].slice(1);
+                    var p = 0;
+                    var j;
+                    while(p < finalMetrics[ind].length){
+                        j = -1;
+                        var found = false;
+                        while(j < tmp_option.length && !found){
+                            j++;
+                            if(finalMetrics[ind][p].side != 'right' && 
+                                tmp_option[j].includes(finalMetrics[ind][p].metric) && 
+                                j < tmp_option.length) found = true;
+                        }
+                        if(found){
+                          var operator = tmp_option[j].replace(finalMetrics[ind][p].metric + ', ', "");
+                          var num_value = tmp_row[tmp_cols.indexOf(finalMetrics[ind][p].name)];
+                          var num_value_str = num_value.toString() + operator;
+                          opts[p] = eval(num_value_str);
+                        }
+                        p++;
+                    }
+                }
+                //transform all the metric columns to default and add
+                var resu = '';
+                if(schQuant[i] != "Texto" && tmp_option != -1){
+                    var j = 0;
+                    var found = false;
+                    while(j < tmp_option.length && !found){
+                        if(tmp_option[j].includes(schMetric[i])) found = true;
+                        j++
+                    }
+                    if(found){
+                      var op = tmp_option[j-1].replace(schMetric[i]+ ', ', "");
+                      var tmp_op = op;
+                      switch(op[0]){
+                          case '+': op = tmp_op.replace('+', '-'); break;
+                          case '-': op = tmp_op.replace('-', '+'); break;
+                          case '*': op = tmp_op.replace('*', '/'); break;
+                          case '/': op = tmp_op.replace('/', '*'); break;
+                          default: break;
+                      }
+                      console.log(op);
+                      var ini = 0;
+                      var o = opts.reduce((r, s) => r+s, ini);
+                      o = o.toString() + op;
+                      resu = eval(o);
+                    }
+                }
+                var to_save = tmp_e+resu;
+                final_csv += to_save + ',';
+            }
+        }
+    });
+    const blob = new Blob([final_csv]);
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'data.csv';
+    document.body.appendChild(downloadLink);
+    setTimeout(() => {
+        downloadLink.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+            document.body.removeChild(downloadLink);
+        }, 100);
+    }, 0);
+    document.body.removeChild(shadow);
+    var event = new Event("close");
+    document.dispatchEvent(event);
 }
