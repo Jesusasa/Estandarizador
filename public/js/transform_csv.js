@@ -444,12 +444,16 @@ function lastStep(a){
                           case '/': op = tmp_op.replace('/', '*'); break;
                           default: break;
                       }
-                      console.log(op);
                       var ini = 0;
                       var o = opts.reduce((r, s) => r+s, ini);
                       o = o.toString() + op;
                       resu = eval(o);
                     }
+                }
+                else{
+                    var ini = 0;
+                    var o = opts.reduce((r, s) => r+s, ini);
+                    resu = o.toString();
                 }
                 var to_save = tmp_e+resu;
                 final_csv += to_save + ',';
