@@ -193,9 +193,10 @@ function loadSelect(){
     fetch('/relationsS')
         .then(response => response.json())
         .then(data => {
-            
+            var a = document.getElementById('maps');
+            a.innerHTML = "";
             data.forEach(element => {
-                var a = document.getElementById('maps');
+                a = document.getElementById('maps');
                 var option = document.createElement('option');
                 var ele = String(element)
                 ele = ele.replace(".txt", "");
@@ -203,7 +204,6 @@ function loadSelect(){
                 option.value = ele;
                 a.appendChild(option);
             });
-            var a = document.getElementById('maps');
             var option = document.createElement('option');
             option.textContent = "Create New";
             option.value = "create";
