@@ -11,7 +11,9 @@ function load_scheme(){
         .then(response => response.text())
         .then(data => {
            var lines = data.split('\n');
-
+            schNames = [];
+            schQuant = [];
+            schMetric = [];
             a.innerHTML = '';
             var counterR = 0;
             for (var i = 0; i < lines.length-1; i++) {

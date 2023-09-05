@@ -189,14 +189,16 @@ function paintBorders(){
 }
 
 function loadSelect(){
-
+    var a = document.getElementById('maps');
+    for(var i = a.options.length; i> 0;i--){
+        a.remove(i);
+    }
+    a.options[0].selected = true;
     fetch('/relationsS')
         .then(response => response.json())
         .then(data => {
-            var a = document.getElementById('maps');
-            a.innerHTML = "";
             data.forEach(element => {
-                a = document.getElementById('maps');
+                var a = document.getElementById('maps');
                 var option = document.createElement('option');
                 var ele = String(element)
                 ele = ele.replace(".txt", "");
@@ -204,6 +206,7 @@ function loadSelect(){
                 option.value = ele;
                 a.appendChild(option);
             });
+            var a = document.getElementById('maps');
             var option = document.createElement('option');
             option.textContent = "Create New";
             option.value = "create";

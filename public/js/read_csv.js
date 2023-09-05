@@ -1,6 +1,9 @@
 
 
 function readCSVFile(event) {
+  links.length = 0;
+  linkedL=[];
+  linkedR=[];
   var input = event.target;
   var reader = new FileReader();
 
