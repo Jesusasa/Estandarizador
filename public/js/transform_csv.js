@@ -384,7 +384,9 @@ function lastStep(a){
         //for each column of the scheme. Columns that don't appear in links will be left empty
         //we use a for instead of a forEach so we also keep track of the index we are in
         //-since we gotta check if It's in links
+        
         for(var i = 0; i < schNames.length; i++){
+            var entry = false;
             var opts = [];
             if(rList.indexOf(i) == -1){
                 final_csv += ',';
@@ -402,6 +404,7 @@ function lastStep(a){
                 var tmp_ind = finalMetrics[ind].map(a => a.name).indexOf(tmp_q);
                 var tmp_option = -1;
                 if(tmp_ind != -1){
+                    entry = true;
                     var m = finalMetrics[ind][tmp_ind].quantity;
                     var n = options.map(a => a[0]).indexOf(m);
                     tmp_option = options[n].slice(1);
@@ -417,6 +420,8 @@ function lastStep(a){
                                 j < tmp_option.length) found = true;
                         }
                         if(found){
+                          console.log(finalMetrics[ind][p].name);
+                          console.log(tmp_cols);
                           var operator = tmp_option[j].replace(finalMetrics[ind][p].metric + ', ', "");
                           var num_value = tmp_row[tmp_cols.indexOf(finalMetrics[ind][p].name)];
                           var num_value_str = num_value.toString() + operator;
@@ -427,6 +432,8 @@ function lastStep(a){
                 }
                 //transform all the metric columns to default and add
                 var resu = '';
+                console.log(schQuant[i])
+                console.log(resu);
                 if(schQuant[i] != "Texto" && tmp_option != -1){
                     var j = 0;
                     var found = false;
@@ -451,10 +458,14 @@ function lastStep(a){
                     }
                 }
                 else{
-                    var ini = 0;
-                    var o = opts.reduce((r, s) => r+s, ini);
-                    resu = o.toString();
+                    if(entry){
+                        var ini = 0;
+                        var o = opts.reduce((r, s) => r+s, ini);
+                        resu = o.toString();
+                    } else resu = "";
                 }
+                entry = false;
+                console.log(resu);
                 var to_save = tmp_e+resu;
                 final_csv += to_save + ',';
             }
