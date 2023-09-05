@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear medidas</title>
+    <link rel='stylesheet' href='../css/bootstrap.min.css' />
+    <link rel='stylesheet' href='../css/edit.css' />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/addRow.js"></script>
+    <script src="../js/read_csv.js"></script>
+    <script src="../js/getMedidas.js"></script>
+</head>
+<body>
+  <div class="titulo">
+    <div class="row">
+      <div class="col">
+        <button type="button" class="botonAtras"><a href="/"><img src="/img/volver2.png" width="50px" height="50px" class="rounded-circle"></a></button>
+      </div>
+      <div class="col col-11">
+        <h1 style="margin-right: 7rem;">Estandarizador de BBDD</h1> 
+      </div>
+    </div>
+    <br>
+    <div class="row" style="display: flex; justify-content: center;">
+      <h2>Crear medidas propias</h2>
+    </div>
+  </div>
+  <div class="break" style="display: none;">
+    <input type="file" onchange="readCSVFile(event);" accept=".csv" />
+  </div>
+  <div>
+    <center>
+        Las nuevas medidas deben incluir una equivalencia respecto a la primera de ellas.
+        <br>
+        Es decir, la primera debe tener equivalencia = *1.
+    </center>
+  </div>
+  <form action="/crear_modelo" method="POST" id="form">
+    <div class="bbdd">
+      <div class="der">
+        <div id="tipo" class="tipo" style="margin: 10px 0px">
+          Tipo: <input type="text" placeholder="Ejemplo: longitud" name="tipo">
+        </div>
+        <div id="medidas">
+          <!--vamos a crear las filas de forma dinamica, que son las medidas, para guardarlas en JSON-->
+        </div>
+        <!--
+        <% let nMedidas = 0; %>
+        <div id="medida<%= nMedidas %>" class="medidas">
+            Medida: <input type="text" placeholder="Ejemplo: metro" name="medidas[]">
+            Equivalencia: <input type="text" placeholder="Ejemplo: 1" name="equivalencias[]">
+        </div>
+        -->
+        <button type="button" class="btn btn-outline-warning newRow" style="text-decoration: none; color: black; margin-top: 10px;" id="nuevaMedida" onclick="anadirMedida(event)">Añadir medida</button>
+      </div>
+      <button class="btn btn-outline-warning" style="text-decoration: none; color: black;" type="submit" onclick="submitFormulario(event)">Guardar</button>
+    </div>
+  </form>
+</body>
+</html>

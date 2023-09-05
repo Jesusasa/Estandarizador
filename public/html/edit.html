@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel='stylesheet' href='../css/bootstrap.min.css' />
+        <link rel="stylesheet" href="edit.css">
+        <script src="../js/addRow.js"></script>  
+        <script src="../js/read_csv.js"></script>
+        <script src="../js/global.js"></script>
+        <script src="../js/load_datascheme.js"></script>
+        <script src="../js/select_options.js"></script>
+        <script src="../js/link_rows.js"></script>
+        <script src="../js/transform_csv.js"></script>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+    </head>
+    <body>
+      <button type="button" onclick="transform()" id="transform" disabled>Transformar CSV</button>
+      <button type="button" onclick="link();" id="tolink" disabled>Vincular Grupo</button>
+      <button type="button" onclick="unlink()" id="unlink" disabled>Desvincular Grupo</button>
+      <div class="titulo">
+        <h1>Estandarizador de BBDD</h1>     
+      </div>
+      <div class="break">
+        <select id="maps" name="mapping" id="mapping">
+          <option value="empty">---</option>
+        </select>
+        <input type="file" onchange="readCSVFile(event);" accept=".csv" />
+        
+      </div>
+      <div class="bbdd">
+        <div class="izq" id="outputCSV" ></div>
+        <div class="der" id="outputSCH" ></div>
+      </div>
+    </body>
+</html>

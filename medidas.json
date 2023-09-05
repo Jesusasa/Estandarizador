@@ -1,0 +1,8 @@
+[
+  {
+    "{\"tipo\":\"longitud\",\"filas\":[{\"medida\":\"metro\",\"equivalencia\":\"1\"},{\"medida\":\"onza\",\"equivalencia\":\"11\"}]}": ""
+  },
+  {
+    "{\"tipo\":\"peso\",\"filas\":[{\"medida\":\"kilos\",\"equivalencia\":\"1\"},{\"medida\":\"gramos\",\"equivalencia\":\"1000\"}]}": ""
+  }
+]
